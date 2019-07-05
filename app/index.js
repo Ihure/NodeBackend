@@ -8,9 +8,10 @@ const bodyParser = require('body-parser');
 const debug = require('debug')('server:debug');
 const cors = require('cors');
 const helmet = require('helmet');
-const winston = require('winston');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+import morgan from 'morgan';
+import logger from './middleware/logger';
 
 //define our app
 const app = express();
@@ -24,6 +25,9 @@ app.use(helmet());
 
 // enable cors for all requests
 app.use(cors());
+
+// logging setting
+app.use(morgan('combined', {stream: logger.stream}));
 
 // set up server
 const port = process.env.PORT || 8000;        // set our port
@@ -53,9 +57,6 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-//endpoint where user can see the documentation.
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
 // ROUTES FOR OUR API
 // =============================================================================
 const router = express.Router();
@@ -64,7 +65,10 @@ const router = express.Router();
 // all of our routes will be prefixed with /api
 app.use('/api/v1', router);
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+//endpoint where user can see the documentation.
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+// test route to make sure everything is working (accessed at GET http://localhost:3000/api)
 router.get('/', function(req, res) {
   res.json({ message: 'hooray! welcome to our api!' });
 });
