@@ -1,5 +1,5 @@
 import express from 'express';
-const router =express.Router();
+const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -111,12 +111,70 @@ router.get('/', function(req, res, next) {
  *          type: object
  *          $ref: '#/definitions/Unauthorized'
  */
-router.get('/customer', handler(async (req,res) => {
+router.get('/customer', async (req,res) => {
   try {
     res.send('respond with a resource');
   } catch (error) {
     res.status(500).send({message:'Interval server error'})
   }
-}));
+});
+
+/**
+ * @swagger
+ * /customer:
+ *   post:
+ *     summary: Register a Customer
+ *     produces:
+ *       - application/json
+ *     tags:
+ *        - Customers
+ *     parameters:
+ *      - name: name
+ *        description: Name of user
+ *        in: formData
+ *        required: true
+ *        type: string
+ *      - name: email
+ *        description: Email of user
+ *        in: formData
+ *        required: true
+ *        type: string
+ *      - name: password
+ *        description: Password of user
+ *        in: formData
+ *        required: true
+ *        type: string
+ *     responses:
+ *       200:
+ *         description: Return a Object of Customer with auth credentials
+ *         schema:
+ *           type: object
+ *           $ref: '#/definitions/Customer'
+ *       400:
+ *         description: Return error object
+ *         schema:
+ *          type: object
+ *          $ref: '#/definitions/Error'
+ *       401:
+ *        description: Unauthorized
+ *        schema:
+ *          type: object
+ *          $ref: '#/definitions/Unauthorized'
+ */
+
+router.post('/customer', async (req,res) => {
+  try {
+    res.send('respond with a resource');
+  } catch (error) {
+    res.status(500).send({message:'Interval server error'})
+  }
+});
+
+
+
+/* GET home page. */
+router.get('/home', function(req, res, next) {
+  res.json({ message: 'hooray! welcome to our api!' });
+});
 
 module.exports = router;

@@ -1,6 +1,5 @@
 import winston from 'winston';
 const appRoot = require('app-root-path');
-
 const options = {
     file: {
         level: 'info',
@@ -33,7 +32,7 @@ logger.stream = {
     }
 };
 
-const handler = (func) => (req, res) => {
+/*const handler = (func) => (req, res) => {
     try {
        logger.info('server.handler.begun');
        func(req, res, logger);
@@ -42,5 +41,7 @@ const handler = (func) => (req, res) => {
         res.send('oh no, something went wrong');
     }
 };
+*/
 
-module.exports = logger;
+exports.logger = logger;
+//exports.handler = handler;

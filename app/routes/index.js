@@ -1,19 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-// initialize swagger-jsdoc
-var swaggerSpec = swaggerJSDoc(options);
+import routes from './v1';
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-// serve swagger
-router.get('/swagger.json', function(req, res) {
-  res.setHeader('Content-Type', 'application/json');
-  res.send(swaggerSpec);
-});
-
+//register routes
+router.use('/', routes);
 
 module.exports = router;

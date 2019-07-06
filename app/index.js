@@ -8,10 +8,11 @@ const bodyParser = require('body-parser');
 const debug = require('debug')('server:debug');
 const cors = require('cors');
 const helmet = require('helmet');
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
 import morgan from 'morgan';
 import logger from './middleware/logger';
+import router from './routes';
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
 //define our app
 const app = express();
@@ -37,6 +38,7 @@ const listen = app.listen( port,()=>{
   console.log(`server is running on port ${process.env.PORT} and in ${process.env.MODE} mode`);
 });
 
+// serve swagger
 //Api Documentation Settings
 // =============================================================================
 
@@ -52,28 +54,17 @@ const options = {
     basePath: '/api/v1',
   },
   // path to the API docs
-  apis: ['./**/routes/*.js','routes.js'],// pass all in array
+  apis: ['./**/routes/v1/*.js'],// pass all in array
 };
 
 const specs = swaggerJsdoc(options);
 
-// ROUTES FOR OUR API
-// =============================================================================
-const router = express.Router();
+//endpoint where user can see the documentation.
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api/v1', router);
-
-//endpoint where user can see the documentation.
-app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(specs));
-
-// test route to make sure everything is working (accessed at GET http://localhost:3000/api)
-router.get('/', function(req, res) {
-  res.json({ message: 'hooray! welcome to our api!' });
-});
-
-// more routes for our API will happen here
 
 // START THE SERVER
 // =============================================================================
