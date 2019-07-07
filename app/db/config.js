@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const env = require('dotenv').config();
 
 //local mysql db connection
 const connection = mysql.createConnection({

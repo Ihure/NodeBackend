@@ -4,6 +4,11 @@ class Constants {
         message: "",
         field: "",
         status: "500"
+    };
+    static customerResponse = {
+        customer: {},
+        accessToken: '',
+        expires_in: ''
     }
 }
 

@@ -1,4 +1,6 @@
 import express from 'express';
+import CustomerController from '../../controllers/customerController';
+
 const router = express.Router();
 
 /* GET users listing. */
@@ -35,6 +37,17 @@ router.get('/', function(req, res, next) {
  *       status:
  *        type: string
  *        example: 500
+ *   CustomerRegister:
+ *     properties:
+ *       customer:
+ *        type: object
+ *        $ref: '#/definitions/Customer'
+ *       accessToken:
+ *        type: string
+ *        example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE1NTA0MjQ0OTgsImV4
+ *       expires_in:
+ *        type: string
+ *        example: 24h
  *   Customer:
  *     properties:
  *       customer_id:
@@ -149,7 +162,7 @@ router.get('/customer', async (req,res) => {
  *         description: Return a Object of Customer with auth credentials
  *         schema:
  *           type: object
- *           $ref: '#/definitions/Customer'
+ *           $ref: '#/definitions/CustomerRegister'
  *       400:
  *         description: Return error object
  *         schema:
@@ -162,13 +175,7 @@ router.get('/customer', async (req,res) => {
  *          $ref: '#/definitions/Unauthorized'
  */
 
-router.post('/customer', async (req,res) => {
-  try {
-    res.send('respond with a resource');
-  } catch (error) {
-    res.status(500).send({message:'Interval server error'})
-  }
-});
+router.post('/customer', CustomerController.register);
 
 
 
