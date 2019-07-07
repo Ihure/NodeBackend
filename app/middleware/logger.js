@@ -1,5 +1,8 @@
-import winston from 'winston';
+import {createLogger, format, transports} from 'winston';
+
 const appRoot = require('app-root-path');
+const { combine, timestamp, label, prettyPrint} = format;
+
 const options = {
     file: {
         level: 'info',
@@ -8,20 +11,34 @@ const options = {
         json: true,
         maxsize: 5242880, // 5MB
         maxFiles: 5,
-        colorize: true,
+        colorize: false,
+    },
+    errors: {
+        level: 'error',
+        filename: `${appRoot}/logs/error.log`,
+        handleExceptions: true,
+        json: true,
+        maxsize: 5242880, // 5MB
+        maxFiles: 5,
+        colorize: false,
     },
     console: {
         level: 'debug',
         handleExceptions: true,
-        json: false,
+        json: true,
         colorize: true,
     },
 };
 
-const logger = winston.createLogger({
+const logger = createLogger({
+    format: combine(
+        timestamp(),
+        prettyPrint()
+    ),
     transports: [
-        new winston.transports.Console(options.console),
-        new winston.transports.File(options.file)
+        new transports.Console(options.console),
+        new transports.File(options.file),
+        new transports.File(options.errors)
     ],
     exitOnError: false,
 });
