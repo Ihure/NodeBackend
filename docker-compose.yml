@@ -1,0 +1,44 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - database:/var/lib/mysql
+      - ./turing.sql:/docker-entrypoint-initdb.d/turing.sql
+    ports:
+      - "6603:3306"
+    networks: 
+      - webapp
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: turing
+  
+  redis:
+    image: redis:5.0
+    networks: 
+      - webapp
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_db:/data
+
+  api:
+    image:
+    ports:
+      - "3000:3000"
+    networks: 
+      - webapp
+    environment: 
+      DB_HOST: db
+    depends_on:
+      - redis
+      - db
+
+volumes:
+  database:
+  redis_db:
+
+networks: 
+  webapp:

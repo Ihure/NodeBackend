@@ -1,0 +1,12 @@
+/node_modules
+.env
+npm-debug.log
+yarn-error.log
+/dist
+/logs
+/npm-debug.log
+.DS_Store
+.idea/
+.idea/
+database/
+redis_db/
