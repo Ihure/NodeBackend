@@ -1,7 +1,8 @@
-import {createLogger, format, transports} from 'winston';
+import { format, transports} from 'winston';
+import expressWinston from 'express-winston';
 
 const appRoot = require('app-root-path');
-const { combine, timestamp, label, prettyPrint} = format;
+const { combine, timestamp, prettyPrint} = format;
 
 const options = {
     file: {
@@ -11,7 +12,7 @@ const options = {
         json: true,
         maxsize: 5242880, // 5MB
         maxFiles: 5,
-        colorize: false,
+        colorize: true,
     },
     errors: {
         level: 'error',
@@ -20,7 +21,7 @@ const options = {
         json: true,
         maxsize: 5242880, // 5MB
         maxFiles: 5,
-        colorize: false,
+        colorize: true,
     },
     console: {
         level: 'debug',
@@ -30,7 +31,8 @@ const options = {
     },
 };
 
-const logger = createLogger({
+// const logger = createLogger({
+const logger = expressWinston.logger({
     format: combine(
         timestamp(),
         prettyPrint()
