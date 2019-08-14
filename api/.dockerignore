@@ -1,0 +1,11 @@
+.gitignore
+dist
+logs
+npm-debug.log
+Dockerfile
+.dockerignore
+node_modules
+turing.sql
+README.md
+.editorconfig
+.git

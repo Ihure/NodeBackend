@@ -1,14 +1,31 @@
-FROM node:8-alpine
+FROM node:12.6-alpine
+
+# create /home/node dir
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+
+#set working directory
+WORKDIR /home/node/app
+
+#copy package and package-lock.json
+COPY package.json ./
+
+#copy yarn file
+COPY yarn.lock ./
+
+USER node
+
+#RUN yarn install
+
+COPY --chown=node:node . .
 
 EXPOSE 3000
 
-ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
+# Install app dependencies and build static assets.
+RUN yarn global add node-gyp && \
+    yarn install --frozen-lockfile && \
+    yarn cache clean
 
-RUN mkdir /app
-WORKDIR /app
-ADD package.json yarn.lock /app/
-RUN yarn --pure-lockfile
-ADD . /app
+CMD ["yarn", "start"]
 
-CMD ["yarn", "docker:start"]
+#CMD [ "node", "./app" ]
+#CMD npm start

@@ -13,10 +13,13 @@ services:
       - webapp
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: turing
+      MYSQL_DATABASE: turing_api
+      MYSQL_USER: turing
+      MYSQL_PASSWORD: password
   
   redis:
-    image: redis:5.0
+    image: redis:alpine
+    container_name: cache
     networks: 
       - webapp
     ports:
@@ -24,17 +27,41 @@ services:
     volumes:
       - redis_db:/data
 
-  api:
-    image:
+  api1:
+    build: ./api
     ports:
-      - "3000:3000"
+      - "3000"
     networks: 
       - webapp
     environment: 
       DB_HOST: db
+      REDIS_URL: redis://cache
     depends_on:
       - redis
       - db
+
+  api2:
+    build: ./api
+    ports:
+      - "3000"
+    networks:
+      - webapp
+    environment:
+      DB_HOST: db
+      REDIS_URL: redis://cache
+    depends_on:
+      - redis
+      - db
+
+  loadbalancer:
+    build: ./nginx
+    networks:
+      - webapp
+    depends_on:
+      - api1
+      - api2
+    ports:
+      - '80:80'
 
 volumes:
   database:
